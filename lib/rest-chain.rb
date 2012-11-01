@@ -130,7 +130,7 @@ module RestChain
 		response
 	end
 
-	def start_connection(params={ }, &block)
+	def connect(params={ }, &block)
 		follow(:self, params, &block)
 	end
 
