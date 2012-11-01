@@ -19,4 +19,5 @@ class Hash
 		RestChain.build(self, context)
 	end
 
+
 end
