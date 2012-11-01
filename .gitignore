@@ -1,0 +1,12 @@
+Gemfile.lock
+.bundle
+*.gem
+pkg/
+doc/
+log/
+tmp/
+.yardoc/
+nbproject/
+.DS_Store*
+Thumbs.db
+*~

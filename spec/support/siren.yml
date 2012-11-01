@@ -1,0 +1,72 @@
+actions: &actions
+  actions:
+    -
+      name: "create"
+      method: "POST"
+      href: "http://api.x.io/orders/42/items"
+      type: "application/x-www-form-urlencoded"
+
+      fields:
+        -
+          name: "order_id"
+          type: "Integer"
+    -
+      name: "update"
+      method: "PUT"
+      href: "http://api.x.io/orders/42/items"
+      type: "application/x-www-form-urlencoded"
+
+      fields:
+        -
+          name: "order_id"
+          type: "Integer"
+
+
+properties: &properties
+  properties:
+    orderNumber: 42
+    item_number: 42
+    itemCount: 42
+    status:  "pending"
+
+
+links: &links
+  links:
+    -
+      rel: next
+      href: http://api.x.io/orders/42
+    -
+      rel: prev
+      href: http://api.x.io/orders/42
+
+entities: &entities
+  entities:
+    -
+      rel: user
+      href: "http://api.x.io/orders/42/items"
+    -
+      rel: customer
+      href: "http://api.x.io/orders/42/items"
+      <<: *properties
+      <<: *links
+    -
+      rel: items
+      href: "http://api.x.io/orders/42/items"
+
+
+    -
+      rel: loaded_customer
+      <<: *properties
+      <<: *actions
+
+item:
+  <<: *properties
+  <<: *entities
+  <<: *actions
+
+customer:
+  properties:
+    customerId: 42
+    customerName: "cool customer"
+    status:  "pending"
+
