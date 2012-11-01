@@ -9,7 +9,7 @@ module RestChain
 			@context   = context
 			@rel       = attributes['rel']
 			@type      = attributes['type']
-			@request_method = (attributes['method'] || attributes['request_method']).downcase.to_sym rescue :get
+			@request_method = (attributes['method'] || attributes['request_method'] || 'get').downcase.to_sym
 			@params   = { }
 			@template = attributes['template']
 			@headers  = context.headers.dup
