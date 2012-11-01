@@ -58,8 +58,9 @@ RestChain::API::Definition.describe :siren do
 
 	define :links, lookup: true, suggest: :rel do |resource, method_name, *args, &block|
 		next unless resource.attribute?('links')
-		link = resource.chain_path('links.rel', method_name, parent: true)
+		p link = resource.chain_path('links.rel', method_name, parent: true)
 		next unless link
+		p link.to_rest_chain(resource.context)
 		proc = Proc.new { |response| resource.write_attribute(method_name, response) }
 		end_point(link).follow(*args, &proc)
 		resource.instance_eval(&block) if block_given?

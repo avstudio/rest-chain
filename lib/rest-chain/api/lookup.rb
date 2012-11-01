@@ -26,7 +26,7 @@ module RestChain
         end
         return filtered.to_rest_chain(context) if filtered
 
-        if pair = context.pairs[name.to_sym]
+        if context && pair = context.pairs[name.to_sym]
           return pair
         end
 

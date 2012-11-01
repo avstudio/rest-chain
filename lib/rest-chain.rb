@@ -25,7 +25,7 @@ require 'rest-chain/definitions/siren'
 
 module RestChain
 	extend self
-  include Pairing
+	include Pairing
 
 	attr_accessor :logger
 	@logger = Logger.new(STDOUT)
@@ -83,6 +83,10 @@ module RestChain
 		begin
 			case
 				when resource.kind_of?(Resource)
+					resource.instance_variable_set(:@context, context) if context
+					resource
+				when resource.kind_of?(Collection)
+					resource.instance_variable_set(:@context, context) if context
 					resource
 				when resource.is_a?(Array)
 					collection = Collection.new(resource)

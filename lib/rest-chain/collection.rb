@@ -61,6 +61,10 @@ module RestChain
 			end
 		end
 
+		def chain_path(*args)
+			@collection.chain_path(*args)
+		end
+
 		#nightmare
 		def method_missing(name, *args, &block)
 			out = nil
