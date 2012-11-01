@@ -5,6 +5,9 @@ module RestChain
 
 		def initialize(collection)
 			@collection = collection || []
+			class << @collection
+				attr_reader :context
+			end
 		end
 
 		def original
@@ -62,8 +65,10 @@ module RestChain
 		end
 
 		def chain_path(*args)
+			@collection.instance_variable_set(:@context,self.context)
 			@collection.chain_path(*args)
 		end
+
 
 		#nightmare
 		def method_missing(name, *args, &block)

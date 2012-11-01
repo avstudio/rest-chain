@@ -7,7 +7,7 @@ class Array
 			options     = { }
 		end
 		options ||= { }
-		context = self.respond_to?(:context) ? self.context : RestChain
+	p	context = self.respond_to?(:context) ? self.context : RestChain
 		path    = dotted_path.split('.', 2)
 		key     = path.shift
 		parent  = options[:parent]
