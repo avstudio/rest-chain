@@ -118,7 +118,6 @@ module RestChain
 		Link.new(self, options, &block)
 	end
 
-	alias :at :link_to
 
 
 	def follow(name_or_url= nil, params={ }, &block)
@@ -131,6 +130,8 @@ module RestChain
 		response.to_rest_chain(self) if response
 		response
 	end
+	alias :at :follow
+
 
 	def connect(params={ }, &block)
 		follow(:self, params, &block)
