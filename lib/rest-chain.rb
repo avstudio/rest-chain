@@ -28,11 +28,10 @@ module RestChain
 	include Pairing
 
 	attr_accessor :logger
-	@logger = Logger.new(STDOUT)
 
-	# to support inclusion ...
-	def included(klass)
-		klass.send :extend, self
+
+	def logger
+		@logger ||= Logger.new(STDOUT)
 	end
 
 	def configure(&block)
