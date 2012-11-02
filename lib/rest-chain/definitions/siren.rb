@@ -8,7 +8,7 @@ RestChain::API::Definition.describe :siren do
 
 
 	define :on_load do |resource|
-		resource.write_attribute('class',"self_class") if resource.attribute?('class')  #to make Ruby to work
+		resource.write_attribute('class',resource.read_attribute("self_class")) if resource.attribute?('class')  #to make Ruby to work
 		resource.update_attributes(resource.read_attribute('properties'))  if resource.attribute?('properties')
 		resource
 	end
