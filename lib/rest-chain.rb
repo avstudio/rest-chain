@@ -71,7 +71,7 @@ module RestChain
 	end
 
 	def add_to_headers(hash={ })
-		@headers[:headers].merge(hash)
+		@headers[:headers].merge!(hash)
 	end
 
 
