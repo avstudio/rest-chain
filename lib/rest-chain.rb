@@ -52,9 +52,9 @@ module RestChain
 	end
 
 
-	def class_name(name=nil)
-		@class_name = name if name
-		@class_name
+	def resource_class(name=nil)
+		@resource_class = name if name
+		@resource_class
 	end
 
 
@@ -76,7 +76,7 @@ module RestChain
 
 
 	def new(attributes={ }, &block)
-		class_name ? class_name.new(attributes, &block) : build(attributes || { })
+		resource_class ? resource_class.new(attributes, &block) : build(attributes || { })
 	end
 
 	#todo move inside some module or something
