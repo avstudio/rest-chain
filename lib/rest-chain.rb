@@ -1,5 +1,4 @@
 require 'typhoeus'
-require 'oj'
 require 'multi_json'
 require 'uri_template'
 require 'logger'
