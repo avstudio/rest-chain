@@ -76,7 +76,7 @@ module RestChain
 
 
 	def new(attributes={ }, &block)
-		resource_class ? resource_class.new(attributes, &block) : build(attributes || { })
+		resource_class ? build(resource_class.new(attributes, &block)) : build(attributes || { })
 	end
 
 	#todo move inside some module or something
