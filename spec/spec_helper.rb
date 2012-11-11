@@ -13,6 +13,7 @@ Spork.prefork do
   $:<< './lib'
   require 'rest-chain'
 	SIREN_YML = YAML.load(File.read(File.dirname(__FILE__) +"/support/siren.yml"))
+	 Dir[File.join(File.dirname(__FILE__) + '/support/**/*.rb')].each { |f| require f }
 
 	include RestChain
 	RestChain.entry_point "http://localhost:9292"

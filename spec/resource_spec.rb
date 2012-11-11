@@ -36,8 +36,12 @@ describe "Resource" do
     google.yahoo.name.should == "yahoo"
   end
 
+  it "should pair and respond to the paired client method trought different context" do
+    google = Client.build('href' => 'http://www.google.com') 
+    yahoo = Client.build('href' => 'http://www.yahoo.com', 'properties' => { 'name' => "yahoo" }) 
+    RestChain.pairs.should be_empty
+    google.pair(:yahoo, yahoo)
+    google.yahoo.name.should == "yahoo"
+  end
+
 end
-
-
-
-
