@@ -1,8 +1,11 @@
 module RestChain
+   #todo clean this 
+  class BrokenChainError < StandardError; end
 
-	#borrowed from Restfulie
+  #borrowed from Restfulie
   module Error
     # Standard error thrown on major client exceptions
+
     class RestChain < StandardError
       attr_reader :response
       attr_reader :request
@@ -14,7 +17,7 @@ module RestChain
 
       def to_s
         "HTTP error #{@response.code} when invoking #{@request.host} via #{@response.method}. " +
-            ((@response.body.blank?) ? "No additional data was sent." : "The complete response was:\n" + @response.body)
+          ((@response.body.blank?) ? "No additional data was sent." : "The complete response was:\n" + @response.body)
       rescue
         super
       end
@@ -34,7 +37,7 @@ module RestChain
     class UnknownError < RestChain;
     end
 
-   class InvalidSerializationError < RestChain;
+    class SerializationError < RestChain;
     end
 
     # Represents the HTTP code 300 range

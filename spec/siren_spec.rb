@@ -47,7 +47,7 @@ describe "Siren" do
 		stub_request(:put, "http://api.x.io/orders/42/items").to_return(:body => updated_item.to_json)
 		stub_request(:get, "http://api.x.io/orders/42/items").to_return(:body => item.to_json)
 		resource = item.to_rest_chain
-		resource.entities.update(status: 'active').status.should == "active"
+		resource.update(status: 'active').status.should == "active"
 	end
 
 	it "should update new item" do

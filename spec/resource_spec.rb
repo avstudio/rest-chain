@@ -39,9 +39,22 @@ describe "Resource" do
   it "should pair and respond to the paired client method trought different context" do
     google = Client.build('href' => 'http://www.google.com') 
     yahoo = Client.build('href' => 'http://www.yahoo.com', 'properties' => { 'name' => "yahoo" }) 
-    RestChain.pairs.should be_empty
     google.pair(:yahoo, yahoo)
+    RestChain.pairs.should be_empty
+    Client.pairs.should_not be_empty
     google.yahoo.name.should == "yahoo"
   end
+
+
+
+  it "should build rest chain object from different resource class" do
+     RestChain.resource_class =  CustomResource
+     CustomResource.new( :title=>"something").title.should == "something"
+     resource = RestChain.build(:title=>"something")
+     resource.title.should =="something"
+     resource.should be_kind_of(CustomResource)
+     resource.should respond_to(:read_attribute)
+  end
+
 
 end

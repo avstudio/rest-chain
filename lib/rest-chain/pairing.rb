@@ -1,7 +1,9 @@
 module RestChain
   module Pairing
-    extend self
 
+    def self.included(klass)
+      klass.instance_variable_set(:@pairs,{})
+    end
 
     def pair(name, client)
       raise ArgumentError, "U can't pair object which is not  the RestChain resource!" unless client.kind_of?(Resource) ||  client.kind_of?(Collection)
@@ -11,19 +13,18 @@ module RestChain
 
 
     def pairs
-	    @pairs       ||={ }
+      @pairs       ||={ }
     end
 
     def unpair(name)
-	    pairs.delete(name)
+      pairs.delete(name)
       self
     end
 
 
     def unpair_all
-	    @pairs = {}
+      @pairs = {}
     end
-
 
   end
 end

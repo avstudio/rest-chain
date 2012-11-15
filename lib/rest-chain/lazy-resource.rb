@@ -1,15 +1,15 @@
 module RestChain
-	class LazyResource
+  class LazyResource
 
-		attr_reader :resource
+    attr_reader :resource
 
-		def initialize(resource)
-			@resource = resource
-		end
+    def initialize(resource)
+      @resource = resource
+    end
 
-		def method_missing(name, *args, &block)
+    def method_missing(name, *args, &block)
 
-		end
+    end
 
-	end
+  end
 end

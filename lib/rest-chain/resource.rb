@@ -2,33 +2,12 @@ module RestChain
   module Resource
     attr_reader :context, :original
 
-    def read_attribute(*)
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-    end
-
-    def attribute?(*)
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-    end
-
-    def write_attribute(*)
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-    end
-
-    def update_attributes(*)
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-    end
-
-    def lazy
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-    end
-
-    def reload
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-    end
-
-
-    def lazy?
-      raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
+    def self.extended(resource)
+      %w{read_attribute attribute? write_attribute update_attributes lazy reload lazy}.each do |meth|
+        singleton_class.send :define_method  , meth do |*|
+          raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
+        end unless singleton_class.method_defined?(meth)
+      end
     end
 
     def loaded?
@@ -60,14 +39,14 @@ module RestChain
 
     def follow(name_or_url= nil, params={ }, &block)
       case
-        when name_or_url.nil? || name_or_url ==:self
-          self_link(self)
-        when name_or_url.is_a?(String)
-          context.link_to({ 'href' => name_or_url }.merge(params), &block).follow
-        when name_or_url.is_a?(Hash) || name_or_url.kind_of?(Resource)
-          context.link_to(name_or_url.merge(params), &block).follow
-        else
-          raise("Oops. The chain is broken :(. Invalid URL to follow! Got: #{name_or_url} ")
+      when name_or_url.nil? || name_or_url ==:self
+        self_link(self)
+      when name_or_url.is_a?(String)
+        context.link_to({ 'href' => name_or_url }.merge(params), &block).follow
+      when name_or_url.is_a?(Hash) || name_or_url.kind_of?(Resource)
+        context.link_to(name_or_url.merge(params), &block).follow
+      else
+        raise("Oops. The chain is broken :(. Invalid URL to follow! Got: #{name_or_url} ")
       end
     end
 
