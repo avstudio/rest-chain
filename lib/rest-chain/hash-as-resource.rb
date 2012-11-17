@@ -8,8 +8,8 @@ module RestChain
         end
         meta.send :alias_method, :delete!, :delete
         meta.send :alias_method, :update!, :update
-        meta.send :undef_method, :delete
-        meta.send :undef_method, :update
+      #  meta.send :undef_method, :delete
+      #  meta.send :undef_method, :update
       end
     end
 

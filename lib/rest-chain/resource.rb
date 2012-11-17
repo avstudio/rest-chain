@@ -4,8 +4,8 @@ module RestChain
 
     def self.extended(resource)
       resource.instance_variable_set(:@__rest_chain_resource,true)
-      resource.extend api.lookup
-      api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
+      resource.context.api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
+      resource.extend resource.context.api.lookup
       %w{read_attribute attribute? write_attribute update_attributes reload chain_path lazy?}.each do |meth|
         singleton_class.send :define_method  , meth do |*|
           raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
@@ -33,15 +33,7 @@ module RestChain
     def suggest
       context.api.suggestions_for(self)
     end
-
-
-    def pair(name, client)
-      context.pair(name, client)
-    end
-
-    def unpair(name, client)
-      context.unpair(name, client)
-    end
+    alias :suggestions :suggest
 
 
     def follow(name_or_url= nil, params={ }, &block)

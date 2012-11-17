@@ -22,8 +22,6 @@ Spork.prefork do
   RSpec.configure do |config|
     config.include Rack::Test::Methods
     config.before do
-      RestChain.unpair_all
-      Client.unpair_all
       RestChain.resource_class = nil
       Client.resource_class = nil
     end

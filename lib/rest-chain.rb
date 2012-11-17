@@ -10,7 +10,6 @@ require 'rest-chain/core/hash'
 require 'rest-chain/link'
 require 'rest-chain/error'
 require 'rest-chain/response'
-require 'rest-chain/pairing'
 require 'rest-chain/collection'
 require 'rest-chain/adapters/abstract-adapter'
 require 'rest-chain/adapters/typhoeus-adapter'
@@ -24,14 +23,8 @@ require 'rest-chain/definitions/siren'
 
 module RestChain
   extend self
-  include Pairing
 
   attr_accessor :logger, :resource_class
-
-  def included(klass)
-    klass.extend(RestChain)
-    klass.send :include, Pairing
-  end
 
   def logger
     @logger ||= Logger.new(STDOUT)

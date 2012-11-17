@@ -57,7 +57,7 @@ RestChain::API::Definition.describe :siren do
 
   #static methods
   define_lookup_method :self_link do |resource|
-    link = resource.href
+    link = resource['href']
     link ||= resource.chain_path('links.rel', 'self', parent: true)
     return nil unless link
     resource.follow link

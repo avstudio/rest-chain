@@ -1,12 +1,6 @@
 describe "RestChain" do
   let!(:properties) { SIREN_YML['properties'] }
-  before do
-    RestChain.unpair_all
-  end
-
-  after do
-    RestChain.unpair_all
-  end
+ 
   describe "Inflection" do
 
     it "should inflect new object by reading it" do
@@ -33,23 +27,6 @@ describe "RestChain" do
     resource = properties.clone.to_rest_chain
     resource.orderNumber.should ==42
     resource.original.should == original
-  end
-
-
-  it "should not pair object which is not the RestChain resource" do
-    google = { 'href' => 'http://www.google.com' }
-    expect { RestChain.pair(:google, google) }.to raise_error
-  end
-
-  it "should pair client" do
-    google = { 'href' => 'http://www.google.com' }.to_rest_chain
-    RestChain.pair(:google, google)
-    RestChain.pairs.should include(:google)
-  end
-
-  it "should unpair client" do
-    RestChain.unpair(:google)
-    RestChain.pairs.should_not include(:google)
   end
 
 end
