@@ -1,11 +1,6 @@
 module RestChain
   module API
     module Lookup
-      #Of course, it's not nice, but is safer then method_mising and deep stack levels.
-      # This is just decorator for our resource.
-      #
-      #For the instance of the hash,
-      # each key will be defined as method to the anonimeous module....
       def self.included(klass)
         klass.singleton_class.class_eval do |variable|
           def extended(resource)
