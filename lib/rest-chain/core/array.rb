@@ -4,7 +4,7 @@ class Array
     dotted_path, match_value, options = args
     if match_value.is_a?(Hash)
       match_value = nil
-      options     = { }
+     options     = match_value
     end
     options ||= { }
     context = self.respond_to?(:context) ? self.context : RestChain

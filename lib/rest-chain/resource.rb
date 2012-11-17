@@ -3,7 +3,8 @@ module RestChain
     attr_reader :context, :original
 
     def self.extended(resource)
-      %w{read_attribute attribute? write_attribute update_attributes lazy reload lazy}.each do |meth|
+      resource.instance_variable_set(:@__rest_chain_resource,true)
+      %w{read_attribute attribute? write_attribute update_attributes reload chain_path lazy?}.each do |meth|
         singleton_class.send :define_method  , meth do |*|
           raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
         end unless singleton_class.method_defined?(meth)
@@ -16,6 +17,10 @@ module RestChain
 
     def api
       context.api
+    end
+
+    def lazy
+      raise NotImplementedError, "Currently not supported"
     end
 
     def link_to(options= { })
@@ -46,7 +51,7 @@ module RestChain
       when name_or_url.is_a?(Hash) || name_or_url.kind_of?(Resource)
         context.link_to(name_or_url.merge(params), &block).follow
       else
-        raise("Oops. The chain is broken :(. Invalid URL to follow! Got: #{name_or_url} ")
+        raise(BrokenChainError,"Oops. The chain is broken :(. Invalid URL to follow! Got: #{name_or_url} ")
       end
     end
 

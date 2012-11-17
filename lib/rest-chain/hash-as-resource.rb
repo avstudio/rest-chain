@@ -18,8 +18,6 @@ module RestChain
       value = self[name]
       return nil unless value
       self.inflect!(value)
-      "value"
-      value
     end
 
     def write_attribute(name, value)

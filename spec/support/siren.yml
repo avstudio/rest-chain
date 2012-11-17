@@ -52,10 +52,8 @@ entities: &entities
     -
       rel: items
       href: "http://api.x.io/orders/42/items"
-
-
     -
-      rel: loaded_customer
+      rel: owner
       <<: *properties
       <<: *actions
 
@@ -65,6 +63,7 @@ item:
   <<: *actions
 
 customer:
+  class: "customer"
   properties:
     customerId: 42
     customerName: "cool customer"

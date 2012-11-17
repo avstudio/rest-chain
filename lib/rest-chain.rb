@@ -2,7 +2,6 @@ require 'typhoeus'
 require 'multi_json'
 require 'uri_template'
 require 'logger'
-require 'forwardable'
 
 $:.unshift(File.expand_path(File.dirname(__FILE__))) unless  $:.include?(File.expand_path(File.dirname(__FILE__)))
 
@@ -74,38 +73,28 @@ module RestChain
     build(attributes || { })
   end
 
-  #todo move inside some module or something
+  #todo clean this shit
   def build(hash, context=nil)
     resource =   hash || { }
-    resource =  ( resource_class.instance_method(:initialize).arity  !=0  ? resource_class.new(hash) : resource_class.new) if resource_class
-    #begin
     case
-    when resource.kind_of?(Resource), resource.kind_of?(Collection)
+    when resource.instance_variable_get(:@__rest_chain_resource)
       resource.instance_variable_set(:@context, context) if context
       resource
     when resource.is_a?(Array)
-      collection = Collection.new(resource)
-      collection.instance_variable_set(:@context, context || self)
-      collection
-    when resource.is_a?(Hash)
-      resource.instance_variable_set(:@original, resource.dup)
-      resource.instance_variable_set(:@context, context || self)
-      resource.extend(Resource)
-      resource.extend(HashAsResource) if resource.is_a?(Hash)
-      resource.extend api.lookup
-      api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
-      resource
-    when resource_class
-      resource =   resource_class.instance_method(:initialize).parameters.any? ? resource_class.new(hash) : resource_class.new
-      resource.instance_variable_set(:@context, context || self)
-      resource.extend(Resource)
-      resource.extend api.lookup
-      api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
-      resource
+      build_array(context || self, resource)
+    when resource.class == Hash
+      resource_class ?  build_custom_resource(context || self,resource) :  build_hash(context || self,resource)
+    else
+      if resource_class
+        build_custom_resource(context || self,resource)
+      else
+        resource.extend(Resource)
+        resource.extend api.lookup
+        resource.instance_variable_set(:@context, context || self)
+        api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
+        resource
+      end
     end
-    #  rescue
-    #   raise(BrokenChainError,"Oops. This is not the valid RestChain object :(. Got:  #{resource} ")
-    # end
   end
 
   def entry_point(url=nil)
@@ -117,8 +106,6 @@ module RestChain
   def link_to(options= { }, &block)
     Link.new(self, options, &block)
   end
-
-
 
   def follow(name_or_url= nil, params={ }, &block)
     response = case
@@ -133,10 +120,46 @@ module RestChain
   alias :at :follow
 
 
+
   def connect(params={ }, &block)
     follow(:self, params, &block)
   end
 
+
+
+  #todo clean this shit
+  private
+
+  def build_hash(context, resource={})
+    resource.instance_variable_set(:@original, resource.dup)
+    resource.instance_variable_set(:@context, context)
+    resource.extend(Resource)
+    resource.extend(HashAsResource)
+    resource.extend api.lookup
+    api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
+    resource
+  end
+
+  def build_array(context,resource=[])
+    collection = Collection.new(resource)
+    collection.instance_variable_set(:@context, context)
+    collection
+  end
+
+
+  def build_custom_resource(context,resource)
+    unless resource.instance_of?(resource_class)
+      resource =  ( resource_class.instance_method(:initialize).parameters.any? ? resource_class.new(resource) : resource_class.new)
+    end
+    resource.instance_variable_set(:@context, context)
+    resource.extend(Resource)
+    resource.extend api.lookup
+    api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
+    resource
+  end
+
+
 end
 
-#todo: add suport fo unchaining
+#todo: add suport for unchaining
+#todo: add suport for deep loops braking( problem with for custom classes)

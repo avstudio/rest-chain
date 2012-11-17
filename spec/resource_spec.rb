@@ -47,14 +47,6 @@ describe "Resource" do
 
 
 
-  it "should build rest chain object from different resource class" do
-     RestChain.resource_class =  CustomResource
-     CustomResource.new( :title=>"something").title.should == "something"
-     resource = RestChain.build(:title=>"something")
-     resource.title.should =="something"
-     resource.should be_kind_of(CustomResource)
-     resource.should respond_to(:read_attribute)
-  end
 
 
 end
