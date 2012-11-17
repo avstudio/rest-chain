@@ -4,6 +4,8 @@ module RestChain
 
     def self.extended(resource)
       resource.instance_variable_set(:@__rest_chain_resource,true)
+      resource.extend api.lookup
+      api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
       %w{read_attribute attribute? write_attribute update_attributes reload chain_path lazy?}.each do |meth|
         singleton_class.send :define_method  , meth do |*|
           raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"

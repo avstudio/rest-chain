@@ -89,9 +89,7 @@ module RestChain
         build_custom_resource(context || self,resource)
       else
         resource.extend(Resource)
-        resource.extend api.lookup
         resource.instance_variable_set(:@context, context || self)
-        api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
         resource
       end
     end
@@ -127,16 +125,13 @@ module RestChain
 
 
 
-  #todo clean this shit
   private
 
   def build_hash(context, resource={})
     resource.instance_variable_set(:@original, resource.dup)
     resource.instance_variable_set(:@context, context)
-    resource.extend(Resource)
     resource.extend(HashAsResource)
-    resource.extend api.lookup
-    api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
+    resource.extend(Resource)
     resource
   end
 
@@ -153,8 +148,6 @@ module RestChain
     end
     resource.instance_variable_set(:@context, context)
     resource.extend(Resource)
-    resource.extend api.lookup
-    api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
     resource
   end
 
