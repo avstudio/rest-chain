@@ -58,6 +58,7 @@ entities: &entities
       <<: *actions
 
 item:
+  class: "item"
   <<: *properties
   <<: *entities
   <<: *actions

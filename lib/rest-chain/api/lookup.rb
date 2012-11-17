@@ -5,8 +5,8 @@ module RestChain
         klass.singleton_class.class_eval do
           def extended(resource)
             extension = Module.new do
-              resource.each_pair do |k,v|
-                define_method( k ) {read_attribute( k)}
+              resource.attributes.each_pair do |k,v|
+                define_method( k ) {read_attribute( k)} unless respond_to?(k.to_sym)
               end
               resource.suggest.each do |name|
                 define_method name do | *args, &block|

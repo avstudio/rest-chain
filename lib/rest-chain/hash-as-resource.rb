@@ -13,6 +13,10 @@ module RestChain
       end
     end
 
+    def attributes
+      self
+    end
+
     #todo make infection module
     def read_attribute(name)
       value = self[name]

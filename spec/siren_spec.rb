@@ -10,6 +10,9 @@ describe "Siren" do
 	let(:properties) { SIREN_YML['properties'].dup }
 	let(:entities) { SIREN_YML['entities'].dup }
 
+    it "class method shout not be ovveriden by siren class attribute" do
+      customer.to_rest_chain.class.should == Hash
+    end
 
 	it "should load self with self_link" do
 		stub_request(:get, "http://api.x.io/orders/42/items").to_return(:body => item.to_json)
