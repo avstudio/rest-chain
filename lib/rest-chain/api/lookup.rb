@@ -2,7 +2,7 @@ module RestChain
   module API
     module Lookup
       def self.included(klass)
-        klass.singleton_class.class_eval do |variable|
+        klass.singleton_class.class_eval do
           def extended(resource)
             extension = Module.new do
               resource.each_pair do |k,v|
