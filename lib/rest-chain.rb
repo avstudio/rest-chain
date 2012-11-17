@@ -26,6 +26,10 @@ module RestChain
 
   attr_accessor :logger, :resource_class
 
+  def included(klass)
+    klass.extend(RestChain)
+  end
+
   def logger
     @logger ||= Logger.new(STDOUT)
   end
