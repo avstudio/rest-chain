@@ -151,5 +151,6 @@ module RestChain
 
 end
 
+#todo: remove context from core classes
 #todo: add suport for unchaining
 #todo: add suport for deep loops braking( problem with for custom classes)
