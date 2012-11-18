@@ -3,13 +3,10 @@ module RestChain
 
     def self.extended(resource)
       unless resource.nil?
-        meta = class << resource;
-          self
+        class << resource;
+          alias_method :delete!, :delete
+          alias_method :update!, :update
         end
-        meta.send :alias_method, :delete!, :delete
-        meta.send :alias_method, :update!, :update
-      #  meta.send :undef_method, :delete
-      #  meta.send :undef_method, :update
       end
     end
 
@@ -51,6 +48,16 @@ module RestChain
 
     def lazy?
       key?('href')
+    end
+
+    def chain_path__(*args)
+      res = super(*args)
+      p "context from"
+      p context
+      p "res context before"
+      res.respond_to?(:to_rest_chain) ? res.to_rest_chain(context) : res
+       "res context after"
+      res
     end
 
     def reload

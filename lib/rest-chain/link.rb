@@ -3,6 +3,8 @@ module RestChain
     attr_accessor :href, :context, :type, :rel, :template, :headers, :request_method, :params, :headers
 
     def initialize(context, attributes={ })
+      p context
+      p attributes
       attributes ||={ }
       attributes = attributes.inject({ }) { |el, (k, v)| el[k.to_s] = v; el } #for any case
       @href      = attributes['href']
