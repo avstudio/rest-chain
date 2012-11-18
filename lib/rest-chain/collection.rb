@@ -1,6 +1,7 @@
 module RestChain
   class Collection
     include Enumerable
+    include Inflection
     attr_reader :context
 
     def initialize(collection)

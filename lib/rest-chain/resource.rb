@@ -16,9 +16,10 @@ module RestChain
       end
 
       meta.send :define_method, :read_attribute do |name|
-         inflect! read_attr_meth.call(name)
+        inflect! read_attr_meth.call(name)
       end if read_attr_meth
 
+      resource.extend Inflection
       resource.context.api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
       resource.extend resource.context.api.lookup
     end
@@ -59,16 +60,6 @@ module RestChain
       end
     end
 
-    #todo move to the inflection module
-    ###########################################################
-
-    def inflect!(object)
-      return object unless object.respond_to?(:to_rest_chain)
-      inflected = object.to_rest_chain
-      inflected.instance_variable_set(:@context, self.context)
-      inflected
-    end
-    ###########################################################
 
   end
 end
