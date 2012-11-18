@@ -4,13 +4,23 @@ module RestChain
 
     def self.extended(resource)
       resource.instance_variable_set(:@__rest_chain_resource,true)
+
+      meta =  resource.singleton_class
+      for_implementation =  [ :attribute? ,:write_attribute ,:update_attributes ,:reload ,:chain_path ,:lazy?]
+      read_attr_meth = resource.method(:read_attribute) rescue nil
+      for_implementation << :read_attribute unless read_attr_meth
+      for_implementation.each do |meth|
+        meta.send :define_method  ,meth do |*|
+          raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info. Missing method :#{meth}"
+        end unless resource.respond_to?(meth)
+      end
+
+      meta.send :define_method, :read_attribute do |name|
+         inflect! read_attr_meth.call(name)
+      end if read_attr_meth
+
       resource.context.api.non_lookup_rules.each { |rule| rule.apply_on(resource) }
       resource.extend resource.context.api.lookup
-      %w{read_attribute attribute? write_attribute update_attributes reload chain_path lazy?}.each do |meth|
-        singleton_class.send :define_method  , meth do |*|
-          raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info"
-        end unless singleton_class.method_defined?(meth)
-      end
     end
 
     def loaded?
