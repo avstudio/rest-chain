@@ -16,9 +16,7 @@ module RestChain
 
     #todo make infection module
     def read_attribute(name)
-      value = self[name]
-      return nil unless value
-      self.inflect!(value)
+      inflect! self[name]
     end
 
     def write_attribute(name, value)
@@ -50,14 +48,8 @@ module RestChain
       key?('href')
     end
 
-    def chain_path__(*args)
-      res = super(*args)
-      p "context from"
-      p context
-      p "res context before"
-      res.respond_to?(:to_rest_chain) ? res.to_rest_chain(context) : res
-       "res context after"
-      res
+    def chain_path(*args)
+      inflect! super(*args)
     end
 
     def reload

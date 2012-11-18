@@ -30,18 +30,14 @@ describe "CustomResource" do
   it "should find  and follow customer" do
     stub_request(:get, "http://api.x.io/orders/42/items").to_return(:status => 200, :body => customer.to_json)
     resource = CustomResource.new(item).to_rest_chain
-    resource.customer.customerId.should == 42
-  end
-
-  it "should find  and follow customer" do
-    stub_request(:get, "http://api.x.io/orders/42/items").to_return(:status => 200, :body => customer.to_json)
-    resource = CustomResource.new(item).to_rest_chain
+    p resource.suggest
     resource.customer.customerId.should == 42
   end
 
   it "should find  create action" do
     stub_request(:get, "http://api.x.io/orders/42/items").to_return(:status => 200, :body => customer.to_json)
     resource = CustomResource.new(actions).to_rest_chain
+    p resource.action( :create)
     resource.action( :create)["name"].should == "create"
   end
 

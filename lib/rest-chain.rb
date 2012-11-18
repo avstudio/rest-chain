@@ -14,7 +14,7 @@ require 'rest-chain/inflection'
 require 'rest-chain/collection'
 require 'rest-chain/adapters/abstract-adapter'
 require 'rest-chain/adapters/typhoeus-adapter'
-require 'rest-chain/lazy-resource'
+#require 'rest-chain/lazy-resource'
 require 'rest-chain/resource'
 require 'rest-chain/hash-as-resource'
 require 'rest-chain/api'
@@ -39,16 +39,13 @@ module RestChain
     instance_eval(&block)
   end
 
-
   def api
     @selected_definition ||= API.definition_for(:siren)
   end
 
-
   def use(name)
     @selected_definition = API.definition_for(name)
   end
-
 
   def adapter
     @adapter ||= Adapters::TyphoeusAdapter.new
@@ -66,12 +63,10 @@ module RestChain
     headers[:headers].merge!(hash)
   end
 
-
   def new(attributes={ }, &block)
     build(attributes || { })
   end
 
-  #todo clean this shit
   def build(hash, context=nil)
     resource =   hash || { }
     case
@@ -98,7 +93,6 @@ module RestChain
     @entry_point
   end
 
-
   def link_to(options= { }, &block)
     Link.new(self, options, &block)
   end
@@ -115,12 +109,9 @@ module RestChain
   end
   alias :at :follow
 
-
-
   def connect(params={ }, &block)
     follow(:self, params, &block)
   end
-
 
 
   private
@@ -148,8 +139,6 @@ module RestChain
     resource.extend(Resource)
     resource
   end
-
-
 end
 
 #todo: remove context from core classes

@@ -1,4 +1,5 @@
 module RestChain
+  #todo
   class LazyResource
 
     attr_reader :resource

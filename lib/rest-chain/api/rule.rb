@@ -17,9 +17,10 @@ module RestChain
 
       def suggestions_for(resource)
         return [] unless resource.attribute?(name)
-        @suggestions.collect do |suggestion|
-          resource.chain_path([name, suggestion].join('.'), nil, parent: false, collect: true)
-        end.flatten.compact.collect(&:to_sym)
+        @suggestions.inject([]) do |out,suggestion|
+          out += resource.chain_path([name, suggestion].join('.'), nil, parent: false, collect: true)
+          out
+        end.uniq.map(&:to_sym)
       end
 
 

@@ -2,13 +2,11 @@ module RestChain
   class Collection
     include Enumerable
     include Inflection
+
     attr_reader :context
 
     def initialize(collection)
       @collection = collection || []
-      class << @collection
-        attr_reader :context
-      end
     end
 
     def original
@@ -27,17 +25,13 @@ module RestChain
       false
     end
 
-
     def first
-      resource = @collection.first
-      resource.to_rest_chain(context) if resource
+      inflect! @collection.first
     end
 
     def last
-      resource = @collection.last
-      resource.to_rest_chain(context) if resource
+      inflect! @collection.last
     end
-
 
     def lazy?
       @collection.any?(&:lazy?)
@@ -49,27 +43,36 @@ module RestChain
 
     #todo
     def follow(name_or_url= nil, params={ })
-      raise NotImplementedError, "Currently not supported form collection"
+      raise NotImplementedError, "Currently not supported from collection"
     end
 
+    def +(arr)
+      @collection + arr
+    end
+
+    def -(arr)
+      @collection - arr
+    end
+
+    def to_ary
+      @collection
+    end
 
     def inspect
       return super unless defined?(AwesomePrint)
-      ap self
+      ap "RestChain Collection"
+      ap @collection
     end
-
 
     def each(&block)
       @collection.each do |el|
-        block.call(el.to_rest_chain(context))
+        block.call(inflect!(el))
       end
     end
 
     def chain_path(*args)
-      @collection.instance_variable_set(:@context,self.context)
-      @collection.chain_path(*args)
+      inflect! @collection.chain_path(*args)
     end
-
 
     #nightmare
     def method_missing(name, *args, &block)
@@ -84,6 +87,5 @@ module RestChain
       end
       out
     end
-
   end
 end

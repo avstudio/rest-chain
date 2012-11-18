@@ -9,7 +9,7 @@ RestChain::API::Definition.describe :siren do
 
 
 
-  #todo recognize collection
+  #todo recognize  and group collection
   define :entities, lookup: true, suggest: :rel do |resource, method_name|
     next unless resource.attribute?('entities')
     #group_by_proc = Proc.new { |el| el.values.first }

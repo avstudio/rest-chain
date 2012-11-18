@@ -26,7 +26,7 @@ module RestChain
 
       def initialize(name)
         @name   = name
-        @rules  = @safe_attributes = @shortcuts= []
+        @rules  =  @shortcuts= []
         @lookup = Module.new { include Lookup }
       end
 
@@ -39,6 +39,10 @@ module RestChain
           end
         end
 
+        #todo
+        # def safe_attributes(*args)
+        #   args.each { |name| @current_definition.lookup.send( :define_method, name) { nil }}
+        # end
 
         def apply_rule(name, resource)
           rule = @current_definition.rules.detect { |rule| rule.name == name }
@@ -68,7 +72,5 @@ module RestChain
       end
 
     end
-
-
   end
 end
