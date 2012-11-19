@@ -16,15 +16,15 @@ Spork.prefork do
   SIREN_YML = YAML.load(File.read(File.dirname(__FILE__) +"/support/siren.yml"))
   Dir[File.join(File.dirname(__FILE__) + '/support/*.rb')].each { |f| require f }
 
-  include RestChain
   RestChain.entry_point "http://localhost:9292"
   RestChain.use :siren
 
   RSpec.configure do |config|
     config.include Rack::Test::Methods
     config.before do
-      RestChain.resource_class = nil
-      Client.resource_class = nil
+      rc_conf =  RestChain.instance_variable_get :@default_rest_chain_options
+      cl_conf =  Client.instance_variable_get :@default_rest_chain_options
+      rc_conf[:resource_class] =cl_conf[:resource_class] = nil
     end
   end
 end

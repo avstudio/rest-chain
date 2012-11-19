@@ -4,7 +4,6 @@ module RestChain
 
     def self.extended(resource)
       resource.instance_variable_set(:@__rest_chain_resource,true)
-
       meta =  resource.singleton_class
       for_implementation =  [:read_attribute, :attribute? ,:write_attribute ,:update_attributes ,:reload  ,:lazy?]
       for_implementation.each do |meth|

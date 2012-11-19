@@ -1,8 +1,4 @@
 describe "RestChain" do
-  before(:all) do
-    RestChain.use :siren
-  end
-
   describe "Error" do
     it "should raise error" do
       stub_request(:get, "http://example.com").to_return(:body =>"",:status=>404)

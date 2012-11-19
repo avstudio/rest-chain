@@ -25,47 +25,58 @@ require 'rest-chain/definitions/siren'
 module RestChain
   extend self
 
-  attr_accessor :logger, :resource_class
+  attr_reader :default_rest_chain_options
+  @default_rest_chain_options = {}
 
-  def included(klass)
+
+
+  def self.included(klass)
     klass.extend(RestChain)
+    class << klass; attr_accessor :default_rest_chain_options end
+    klass.instance_variable_set(:@default_rest_chain_options, {})
   end
+
 
   def logger
-    @logger ||= Logger.new(STDOUT)
+    default_rest_chain_options[:logger] ||= Logger.new(STDOUT)
   end
 
-  def configure(&block)
-    instance_eval(&block)
-  end
 
   def api
-    @selected_definition ||= API.definition_for(:siren)
+    default_rest_chain_options[:selected_definition] ||= API.definition_for(:siren)
   end
 
   def use(name)
-    @selected_definition = API.definition_for(name)
+    default_rest_chain_options[:selected_definition] = API.definition_for(name)
   end
 
-  def adapter
-    @adapter ||= Adapters::TyphoeusAdapter.new
+  def adapter(adap = nil)
+    return (default_rest_chain_options[:adapter] ||=  Adapters::TyphoeusAdapter.new) unless adap
+    default_rest_chain_options[:adapter] = adap
   end
 
   def adapter=(klass)
-    @adapter = klass.new
+    default_rest_chain_options[:adapter] = klass.new
   end
 
   def headers
-    @headers ||= { :headers => { :Accept => "application/json", :"Content-Type" => "application/json" } }
+    default_rest_chain_options[:headers] ||= { :headers => { :Accept => "application/json", :"Content-Type" => "application/json" } }
   end
 
   def add_to_headers(hash={ })
     headers[:headers].merge!(hash)
   end
 
-  def new(attributes={ }, &block)
-    build(attributes || { })
+  def entry_point(url=nil)
+    return default_rest_chain_options[:entry_point] unless url
+    default_rest_chain_options[:entry_point] = url
   end
+
+  def resource_class(klass=nil)
+    return default_rest_chain_options[:resource_class] unless klass
+    default_rest_chain_options[:resource_class] = klass
+  end
+
 
   def build(hash, context=nil)
     resource =   hash || { }
@@ -76,22 +87,18 @@ module RestChain
     when resource.is_a?(Array)
       build_array(context || self, resource)
     when resource.class == Hash
-      resource_class ?  build_custom_resource(context || self,resource) :  build_hash(context || self,resource)
+       resource_class ?  build_custom_resource(context || self,resource) :  build_hash(context || self,resource)
     else
       if resource_class
         build_custom_resource(context || self,resource)
       else
-        resource.extend(Resource)
         resource.instance_variable_set(:@context, context || self)
+        resource.extend(Resource)
         resource
       end
     end
   end
 
-  def entry_point(url=nil)
-    @entry_point = url if url
-    @entry_point
-  end
 
   def link_to(options= { }, &block)
     Link.new(self, options, &block)

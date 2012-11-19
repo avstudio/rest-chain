@@ -1,7 +1,4 @@
 describe "Siren" do
-  before(:all) do
-    RestChain.use :siren
-  end
 
   let(:item) { SIREN_YML['item'].dup }
   let(:customer) { SIREN_YML['customer'].dup }
@@ -21,7 +18,7 @@ describe "Siren" do
   end
 
   it "should respond to methods" do
-    resource = Resource.build(item)
+    resource = RestChain.build(item)
     resource.actions.should be_any
     resource.entities.should be_any
   end
@@ -62,7 +59,7 @@ describe "Siren" do
   it "should  load items" do
     stub_request(:get, "http://api.x.io/orders/42/items").to_return(:body => properties.to_json)
     resource = item.to_rest_chain
-    resource.should be_kind_of(Resource)
+    resource.should be_kind_of(RestChain::Resource)
     resource.items.orderNumber.should ==42
   end
 
@@ -71,7 +68,7 @@ describe "Siren" do
     resource = { "links" => [
                    { "rel" => "users", "href" => "http://api.x.io/orders/42/items" },
     { "rel" => "self", "href" => "http://api.x.io/orders/42/items" }] }.to_rest_chain
-    resource.should be_kind_of(Resource)
+    resource.should be_kind_of(RestChain::Resource)
     resource.users.orderNumber.should ==42
   end
 

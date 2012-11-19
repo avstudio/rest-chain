@@ -1,3 +1,3 @@
-module Client
+class Client
 	include RestChain
 end
