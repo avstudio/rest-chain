@@ -6,7 +6,7 @@ module RestChain
       resource.instance_variable_set(:@__rest_chain_resource,true)
 
       meta =  resource.singleton_class
-      for_implementation =  [:read_attribute, :attribute? ,:write_attribute ,:update_attributes ,:reload ,:chain_path ,:lazy?]
+      for_implementation =  [:read_attribute, :attribute? ,:write_attribute ,:update_attributes ,:reload  ,:lazy?]
       for_implementation.each do |meth|
         raise NotImplementedError, "If you want to use custom class as RestChain resource, please implement necessary methods. Read README for more info. Missing method :#{meth}" unless resource.respond_to?(meth)
       end
@@ -31,6 +31,10 @@ module RestChain
       context.link_to(options)
     end
 
+    def end_point(object={ }, &block)
+      point = context.link_to(object)
+      inflect!( block_given? ? block.call(point) : point)
+    end
 
     def suggest
       context.api.suggestions_for(self)

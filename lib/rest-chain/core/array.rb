@@ -27,8 +27,9 @@ class Array
     ( collect ? output : output.first)
   end
 
-  def to_rest_chain(context=nil)
-    RestChain.build(self, context)
+  def to_rest_chain(new_context=nil)
+    new_context ||= self.context if respond_to?(:context)
+    new_context ? new_context.build(self, new_context) : RestChain.build(self, new_context)
   end
 
 end

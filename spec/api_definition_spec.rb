@@ -61,12 +61,10 @@ describe "API Rules" do
     describe "Suggestions" do
       let(:item) { SIREN_YML['item'].dup }
 
-      it "should suggest :user,:create,:customer" do
+      it "should return  :user,:create,:customer" do
         RestChain::API::Definition.describe :demo do
-          define :actions, suggest: :name do |resource|
-          end
-          define :entities, suggest: :rel do |resource|
-          end
+          define( :actions, suggest: :name ){|*|}
+          define( :entities, suggest: :rel ){|*|}
         end
         resource = item.to_rest_chain
         resource.suggestions.should == [:user, :customer, :items, :owner, :create, :update]

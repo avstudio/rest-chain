@@ -17,14 +17,14 @@ RestChain::API::Definition.describe :siren do
     child = resource.chain_path("entities.rel", method_name, parent: true)
     if child
       if (href = child.href)
-        resource.write_attribute(method_name, end_point("href" => href).follow)
+        resource.write_attribute(method_name, resource.end_point("href" => href).follow)
       else
         resource.write_attribute(method_name, child)
       end
       next resource.read_attribute(method_name)
     end
     if (link = resource.chain_path("entities.links.rel", method_name, parent: true))
-      resource.write_attribute(method_name, end_point(link).follow)
+      resource.write_attribute(method_name, resource.end_point(link).follow)
       next resource.read_attribute(method_name)
     end
     next
@@ -37,7 +37,7 @@ RestChain::API::Definition.describe :siren do
     action = resource.chain_path("actions.name", method_name, parent: true)
     next unless action
     next unless action.attribute?('href')
-    resource.write_attribute(method_name, end_point(action).follow(*args) || { })
+    resource.write_attribute(method_name, resource.end_point(action).follow(*args) || { })
     resource.read_attribute(method_name)
   end
 
@@ -48,7 +48,7 @@ RestChain::API::Definition.describe :siren do
     link = resource.chain_path('links.rel', method_name, parent: true)
     next unless link
     proc = Proc.new { |response| resource.write_attribute(method_name, response) }
-    end_point(link).follow(*args, &proc)
+    resource.end_point(link).follow(*args, &proc)
     resource.instance_eval(&block) if block_given?
     resource.read_attribute(method_name)
   end

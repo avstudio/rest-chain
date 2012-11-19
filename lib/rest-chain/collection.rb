@@ -18,7 +18,7 @@ module RestChain
     end
 
     def read_attribute(name)
-      send name
+      inflect! send(name)
     end
 
     def attribute?(name)
@@ -78,14 +78,10 @@ module RestChain
     def method_missing(name, *args, &block)
       out = nil
       each do |el|
-        begin
-          out = el.send(name)
-          out ? break : next
-        rescue
-          next
-        end
+        out = el.send(name)
+        out ? break : next
       end
-      out
+       inflect! out
     end
   end
 end

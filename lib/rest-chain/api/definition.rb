@@ -50,12 +50,6 @@ module RestChain
         end
 
 
-        def end_point(object={ }, &block)
-          point = object.to_rest_chain.context.link_to(object)
-          block_given? ? block.call(point) : point
-        end
-
-
         def define(name, options={ }, &block)
           rule = Rule.new(name, options, &block)
           @current_definition.rules << rule
