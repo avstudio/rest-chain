@@ -6,7 +6,7 @@ module RestChain
           def extended(resource)
             extension = Module.new do
               resource.attributes.each_pair do |k,v|
-                define_method( k ) {read_attribute( k)} unless respond_to?(k.to_sym) #fix for class
+                define_method( k ) {read_attribute( k)} unless respond_to?(k.to_sym)  || unless respond_to?(k.to_sym)#fix for class
               end
               resource.suggest.each do |name|
                 define_method name do |*args, &block|

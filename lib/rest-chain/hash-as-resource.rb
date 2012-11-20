@@ -40,9 +40,6 @@ module RestChain
 
     alias :attribute? :key?
 
-    def respond_to?(name)
-      super(name.to_sym) || key?(name)
-    end
 
     def lazy?
       key?('href')
