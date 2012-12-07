@@ -10,7 +10,7 @@ module RestChain
     end
 
     def original
-      self
+      @collection
     end
 
     def suggest

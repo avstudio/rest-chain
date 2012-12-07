@@ -5,8 +5,10 @@ module RestChain
         klass.singleton_class.class_eval do
           def extended(resource)
             extension = Module.new do
+              meta = (class  << resource; self; end)
               resource.attributes.each_pair do |k,v|
-                define_method( k ) {read_attribute( k)} unless respond_to?(k.to_sym)  || unless respond_to?(k.to_sym)#fix for class
+                _k = k
+                meta.send( :define_method, _k  ){read_attribute( _k)} unless respond_to?(k.to_sym)  ||  resource.respond_to?(k.to_sym)#fix for class
               end
               resource.suggest.each do |name|
                 define_method name do |*args, &block|
