@@ -59,7 +59,7 @@ module RestChain
     end
 
     def inspect
-      return super unless defined?(AwesomePrint)
+      return @collection.inspect unless defined?(AwesomePrint)
       ap "RestChain Collection"
       ap @collection
     end
